@@ -1,12 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(cors());
+
 
 const database = {
 	users: [
@@ -28,6 +26,8 @@ const database = {
 		}
 	]
 }
+app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
 	res.send(database.users);
@@ -68,19 +68,29 @@ app.get('/profile/:id', (req, res) => {
 	}
 })
 
+// app.put('/image', (req, res) => {
+// 	const {id} = req.body;
+// 	let found = false;
+// 	database.users.forEach(user => {
+// 		if (user.id === id) {
+// 			found = true;
+// 			user.entries++
+// 			return res.json(user.entires);
+// 		}
+// 	})
+// 	if (!found) {
+// 		res.status(400).json('not found');
+// 	}
+// })
+
 app.put('/image', (req, res) => {
-	const {id} = req.body;
-	let found = false;
-	database.users.forEach(user => {
-		if (user.id === id) {
-			found = true;
-			user.entries++
-			return res.json(user.entires);
-		}
-	})
-	if (!found) {
-		res.status(400).json('not found');
-	}
+  database.users.forEach(user => {
+    if (user.id === req.body.id) {
+      user.entries++
+      res.json(user)
+    }
+  });
+  res.json('nope')
 })
 
 app.listen(3000, () => {
